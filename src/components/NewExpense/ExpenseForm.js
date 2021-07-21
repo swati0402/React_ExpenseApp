@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useRef} from 'react'
 import '../../styles/ExpenseForm.css'
 import ErrorModal from '../Error/ErrorModal';
 const ExpenseForm =(props)=>{
@@ -6,6 +6,7 @@ const ExpenseForm =(props)=>{
     const [enteredAmount, SetEnteredAmount]=useState('');
     const [enteredDate, SetEnteredDate]=useState('');
     const [showForm, SetshowForm]=useState();
+    const titleRef=useRef()
     //const[userInput,setuserInput]=useState({enteredTitle:'',enteredAmount:'',enteredDate:''})
 
     const titleChangeHandler=(event)=>{
@@ -60,13 +61,13 @@ const ExpenseForm =(props)=>{
         SetshowForm(null)
     }
     return(
-        <div>
+        <React.Fragment>
             {showForm && <ErrorModal message={showForm.message} title={showForm.title} onConfirm={errorhandler}/>}
         <form onSubmit={submitHandler}>
             <div className="new-expense__controls">
                 <div className="new-expense__control">
                     <label>Title</label>
-                    <input type='text'  value={enteredTitle} onChange={titleChangeHandler}></input>
+                    <input type='text'  value={enteredTitle} onChange={titleChangeHandler} ref={titleRef}></input>
                 </div>
                 <div className="new-expense__control">
                     <label>Amount</label>
@@ -82,7 +83,7 @@ const ExpenseForm =(props)=>{
                 <button type="submit">Add Submit</button>
             </div>
         </form>
-        </div>
+        </React.Fragment>
     )
 }
 export default ExpenseForm
