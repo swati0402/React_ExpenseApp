@@ -1,9 +1,11 @@
 import React,{useState} from 'react'
 import '../../styles/ExpenseForm.css'
+import ErrorModal from '../Error/ErrorModal';
 const ExpenseForm =(props)=>{
     const [enteredTitle, SetEnteredTitle]=useState('');
     const [enteredAmount, SetEnteredAmount]=useState('');
     const [enteredDate, SetEnteredDate]=useState('');
+    const [showForm, SetshowForm]=useState();
     //const[userInput,setuserInput]=useState({enteredTitle:'',enteredAmount:'',enteredDate:''})
 
     const titleChangeHandler=(event)=>{
@@ -33,19 +35,33 @@ const ExpenseForm =(props)=>{
 
     const submitHandler=(event)=>{
         event.preventDefault();
-        
+        if(enteredTitle===""){
+            SetshowForm({title:"Invalid Input", message:"Add valid title"});
+        }
+        if(enteredAmount <=0){
+            SetshowForm({title:"Invalid Input", message:"Add amount > 0 "});
+        }
+        if(enteredDate===""){
+            SetshowForm({title:"Invalid Input", message:"Add valid date"});
+        }
         const expenseData={
             title:enteredTitle,
             amount:+enteredAmount,
             date:new Date(enteredDate)
         }
+
         //console.log(expenseData)
         props.onSaveExpenseData(expenseData)
         SetEnteredTitle('')
         SetEnteredAmount('')
         SetEnteredDate('')
     }
+    const errorhandler=()=>{
+        SetshowForm(null)
+    }
     return(
+        <div>
+            {showForm && <ErrorModal message={showForm.message} title={showForm.title} onConfirm={errorhandler}/>}
         <form onSubmit={submitHandler}>
             <div className="new-expense__controls">
                 <div className="new-expense__control">
@@ -66,6 +82,7 @@ const ExpenseForm =(props)=>{
                 <button type="submit">Add Submit</button>
             </div>
         </form>
+        </div>
     )
 }
 export default ExpenseForm
